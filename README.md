@@ -30,16 +30,9 @@ Shoppers can browse and filter products, add items from the product detail page,
 
 ## How to run the application
 
-**Requirements:** Ruby 3.x (see `.ruby-version`), Bundler, SQLite
+Visit: [http://18.188.154.85:3000/](http://18.188.154.85:3000/)
 
-```bash
-cd CSEN164_Assignment2
-bundle install
-bin/rails db:create db:migrate db:seed
-bin/rails server
-```
-
-Open [http://localhost:3000](http://localhost:3000)
+Use the sample accounts below to log in.
 
 ## Sample logins
 
