@@ -1,0 +1,47 @@
+<h1 class="section-title">Your cart</h1>
+
+<% if @line_items.any? %>
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Subtotal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @line_items.each do |item| %>
+        <tr>
+          <td><%= link_to item.product.name, item.product %></td>
+          <td><%= format_price(item.product.price) %></td>
+          <td>
+            <%= form_with model: item, url: line_item_path(item), method: :patch, local: true do |f| %>
+              <%= f.number_field :quantity, min: 0, style: "width: 70px;" %>
+              <%= f.submit "Update", class: "btn-text" %>
+            <% end %>
+          </td>
+          <td><%= format_price(item.product.price * item.quantity) %></td>
+          <td><%= button_to "Remove", line_item_path(item), method: :delete, class: "btn-text" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <p class="cart-total">Total: <%= format_price(@cart.total) %></p>
+
+  <div class="form-actions">
+    <%= link_to "Continue shopping", products_path, class: "btn-secondary" %>
+    <% if logged_in? %>
+      <%= button_to "Checkout", checkout_cart_path, method: :post, class: "btn-primary" %>
+    <% else %>
+      <p class="product-meta"><%= link_to "Log in", login_path %> to checkout.</p>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p>Your cart is empty.</p>
+    <%= link_to "Browse products", products_path, class: "btn-primary" %>
+  </div>
+<% end %>

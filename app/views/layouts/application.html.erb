@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "Blue Market" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <%= link_to "Blue Market", root_path, class: "logo" %>
+        <nav class="main-nav">
+          <%= link_to "Shop", products_path %>
+          <% if logged_in? %>
+            <%= link_to "My Orders", orders_path %>
+          <% end %>
+          <% if logged_in? && current_user.admin? %>
+            <%= link_to "Categories", categories_path %>
+            <%= link_to "New Product", new_product_path %>
+          <% end %>
+        </nav>
+        <div class="header-actions">
+          <%= link_to cart_path, class: "cart-link" do %>
+            Cart
+            <% if current_cart.item_count > 0 %>
+              <span class="cart-badge"><%= current_cart.item_count %></span>
+            <% end %>
+          <% end %>
+          <% if logged_in? %>
+            <span class="user-greeting"><%= current_user.name %></span>
+            <%= button_to "Log out", logout_path, method: :delete, class: "btn-text" %>
+          <% else %>
+            <%= link_to "Log in", login_path, class: "btn-outline" %>
+            <%= link_to "Sign up", signup_path, class: "btn-primary small" %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <% if flash[:notice] %>
+      <div class="flash flash-notice"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="flash flash-alert"><%= flash[:alert] %></div>
+    <% end %>
+
+    <main class="page-content">
+      <%= yield %>
+    </main>
+
+    <footer class="site-footer">
+      <p>CSEN 164 Online Store · Option A</p>
+    </footer>
+  </body>
+</html>

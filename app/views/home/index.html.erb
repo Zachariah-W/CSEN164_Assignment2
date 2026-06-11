@@ -1,0 +1,33 @@
+<section class="hero">
+  <h1>Thoughtfully simple shopping</h1>
+  <p>Discover quality products with honest reviews and a checkout experience that stays out of your way.</p>
+  <%= link_to "Browse all products", products_path, class: "btn-primary" %>
+</section>
+
+<% if @categories.any? %>
+  <div class="category-pills">
+    <% @categories.each do |cat| %>
+      <%= link_to cat.name, products_path(category_id: cat.id), class: "category-pill" %>
+    <% end %>
+  </div>
+<% end %>
+
+<h2 class="section-title">Featured products</h2>
+<% if @products.any? %>
+  <div class="product-grid">
+    <% @products.each do |product| %>
+      <article class="product-card">
+        <h3><%= link_to product.name, product %></h3>
+        <p class="product-price"><%= format_price(product.price) %></p>
+        <p class="product-meta"><%= product.category.name %></p>
+        <% if product.average_rating %>
+          <p class="product-meta"><%= star_display(product.average_rating.round) %> <%= product.average_rating %> (<%= product.review_count %>)</p>
+        <% end %>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p>No products yet. Check back soon.</p>
+  </div>
+<% end %>

@@ -1,0 +1,33 @@
+<h1 class="section-title">
+  <% if current_user.admin? %>
+    All orders
+  <% else %>
+    My orders
+  <% end %>
+</h1>
+
+<% if @orders.any? %>
+  <div class="order-list">
+    <% @orders.each do |order| %>
+      <div class="order-card">
+        <div>
+          <strong>Order #<%= order.id %></strong>
+          <p class="product-meta"><%= order.created_at.strftime("%B %d, %Y at %l:%M %p") %></p>
+          <% if current_user.admin? %>
+            <p class="product-meta">Customer: <%= order.user.name %></p>
+          <% end %>
+          <p class="product-meta">Status: <%= order.status %></p>
+        </div>
+        <div>
+          <p class="product-price"><%= format_price(order.total) %></p>
+          <%= link_to "View", order_path(order), class: "btn-outline" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p>No orders yet.</p>
+    <%= link_to "Start shopping", products_path, class: "btn-primary" %>
+  </div>
+<% end %>

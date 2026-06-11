@@ -1,0 +1,26 @@
+<div class="form-card">
+  <h1>Edit review</h1>
+  <% if @review.errors.any? %>
+    <div class="form-errors">
+      <ul>
+        <% @review.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= form_with model: @review do |f| %>
+    <div class="form-group">
+      <%= f.label :rating %>
+      <%= f.select :rating, (1..5).map { |n| [n, n] } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :comment %>
+      <%= f.text_area :comment %>
+    </div>
+    <div class="form-actions">
+      <%= f.submit "Save", class: "btn-primary" %>
+      <%= link_to "Cancel", @review.product, class: "btn-secondary" %>
+    </div>
+  <% end %>
+</div>

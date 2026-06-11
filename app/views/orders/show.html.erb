@@ -1,0 +1,35 @@
+<h1 class="section-title">Order #<%= @order.id %></h1>
+
+<div class="product-detail">
+  <p class="product-meta">Placed on <%= @order.created_at.strftime("%B %d, %Y") %></p>
+  <% if current_user.admin? %>
+    <p class="product-meta">Customer: <%= @order.user.name %> (<%= @order.user.email %>)</p>
+  <% end %>
+  <p class="product-meta">Status: <%= @order.status %></p>
+  <p class="price-large"><%= format_price(@order.total) %></p>
+</div>
+
+<table class="cart-table">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Unit price</th>
+      <th>Qty</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order.order_items.each do |item| %>
+      <tr>
+        <td><%= link_to item.product.name, item.product %></td>
+        <td><%= format_price(item.unit_price) %></td>
+        <td><%= item.quantity %></td>
+        <td><%= format_price(item.unit_price * item.quantity) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="form-actions" style="margin-top: 24px;">
+  <%= link_to "Back to orders", orders_path, class: "btn-secondary" %>
+</div>

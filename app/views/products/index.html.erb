@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h1 class="section-title" style="margin-bottom: 0;">Shop</h1>
+  <% if logged_in? && current_user.admin? %>
+    <%= link_to "Add product", new_product_path, class: "btn-primary small" %>
+  <% end %>
+</div>
+
+<%= form_with url: products_path, method: :get, class: "filter-bar" do %>
+  <div>
+    <label for="q">Search</label>
+    <%= text_field_tag :q, params[:q], placeholder: "Product name..." %>
+  </div>
+  <div>
+    <label for="category_id">Category</label>
+    <%= select_tag :category_id, options_from_collection_for_select(@categories, :id, :name, params[:category_id]), include_blank: "All categories" %>
+  </div>
+  <%= submit_tag "Filter", class: "btn-primary small" %>
+  <% if params[:q].present? || params[:category_id].present? %>
+    <%= link_to "Clear", products_path, class: "btn-secondary" %>
+  <% end %>
+<% end %>
+
+<div class="category-pills">
+  <%= link_to "All", products_path(q: params[:q]), class: "category-pill #{'active' if params[:category_id].blank?}" %>
+  <% @categories.each do |cat| %>
+    <%= link_to cat.name, products_path(category_id: cat.id, q: params[:q]), class: "category-pill #{'active' if params[:category_id].to_s == cat.id.to_s}" %>
+  <% end %>
+</div>
+
+<% if @products.any? %>
+  <div class="product-grid">
+    <% @products.each do |product| %>
+      <article class="product-card">
+        <h3><%= link_to product.name, product %></h3>
+        <p class="product-price"><%= format_price(product.price) %></p>
+        <p class="product-meta"><%= product.category.name %></p>
+        <% if product.average_rating %>
+          <p class="product-meta stars"><%= star_display(product.average_rating.round) %> <%= product.average_rating %></p>
+        <% end %>
+      </article>
+    <% end %>
+  </div>
+<% else %>
+  <div class="empty-state">
+    <p>No products match your filters.</p>
+  </div>
+<% end %>
